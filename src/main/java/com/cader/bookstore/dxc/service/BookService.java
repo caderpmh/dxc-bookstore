@@ -1,5 +1,6 @@
 package com.cader.bookstore.dxc.service;
 
+import com.cader.bookstore.dxc.exception.BookNotFoundException;
 import com.cader.bookstore.dxc.model.Book;
 import com.cader.bookstore.dxc.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class BookService {
 //
     public Book add(Book b) {
         if (bookRepo.existsById(b.getIsbn())) {
-            throw new RuntimeException("Book exists");
+            throw new RuntimeException( String.format("Book exists isbn='%s'", b.getIsbn()));
         }
         return bookRepo.save(b);
     }
@@ -28,7 +29,7 @@ public class BookService {
 
     public Book updateBook(String isbn, Book updatedBook){
         Book existing = bookRepo.findById(isbn)
-                .orElseThrow(() -> new RuntimeException("Book not found."));
+                .orElseThrow(() -> new BookNotFoundException("Book not found isbn="+isbn));
         existing.setTitle(updatedBook.getTitle());
         existing.setYear(updatedBook.getYear());
         existing.setPrice(updatedBook.getPrice());
