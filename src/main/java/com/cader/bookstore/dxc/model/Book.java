@@ -22,6 +22,11 @@ public class Book {
     private Double price;
     private String genre;
     @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "book_authors",
+            joinColumns = @JoinColumn(name = "book_isbn"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
     private List<Author> authors;
 
 }
